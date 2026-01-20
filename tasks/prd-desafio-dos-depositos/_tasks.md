@@ -44,19 +44,18 @@
 ## Tasks
 
 ### Phase 1: Foundation (Blocking)
-- [ ] 1.0 Firebase Project Setup
+- [x] 1.0 Firebase Project Setup
 
 ### Phase 2: Core Features (Parallel Tracks)
 
 **Track A - Frontend Auth & Data:**
-- [ ] 2.0 Authentication UI (Frontend)
-- [ ] 3.0 Cloud Sync Migration (Firestore)
+- [x] 2.0 Authentication UI (Frontend)
+- [x] 3.0 Cloud Sync Migration (Firestore)
 
 **Track B - Backend:**
 - [ ] 4.0 Backend Setup + Payment Integration
 
 **Track C - Independent Frontend:**
-- [ ] 5.0 Savings Journal (Upload Recibos)
 - [ ] 6.0 Social Share (Imagem Fixa)
 - [ ] 10.0 Ad System Integration (Google AdSense) ← **NEW**
 
@@ -68,6 +67,11 @@
 
 ### Phase 5: Verification
 - [ ] 9.0 E2E Tests & Final Integration
+
+---
+
+## 🚧 Phase 2 (Deferred - Requires Blaze Plan)
+- [ ] 5.0 Savings Journal (Upload Recibos) - **POSTPONED**: Requires Firebase Storage upgrade
 
 ---
 

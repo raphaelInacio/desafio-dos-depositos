@@ -1,5 +1,7 @@
 ---
-status: pending
+status: postponed
+phase: 2
+reason: Requires Firebase Storage (Blaze plan). Deferred to Phase 2 after MVP validation.
 ---
 
 # Task 5.0: Savings Journal (Upload de Recibos)

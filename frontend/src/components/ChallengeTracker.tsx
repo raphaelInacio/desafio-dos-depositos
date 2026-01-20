@@ -37,7 +37,7 @@ export function ChallengeTracker({ challenge, onToggleDeposit, onReset }: Challe
     const currentPaid = new Set(
       challenge.deposits.filter((d) => d.isPaid).map((d) => d.id)
     );
-    
+
     // Find newly paid deposits
     currentPaid.forEach((id) => {
       if (!previousPaidRef.current.has(id)) {
@@ -95,7 +95,7 @@ export function ChallengeTracker({ challenge, onToggleDeposit, onReset }: Challe
           animate={{ opacity: 1, y: 0 }}
           className="mb-6"
         >
-          <ProgressHeader stats={stats} challengeName={challenge.name} />
+          <ProgressHeader challenge={challenge} stats={stats} />
         </motion.div>
 
         <motion.div

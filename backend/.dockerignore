@@ -1,0 +1,8 @@
+target/
+.mvn/
+*.iml
+.idea/
+.git/
+.gitignore
+README.md
+src/main/resources/firebase-service-account.json

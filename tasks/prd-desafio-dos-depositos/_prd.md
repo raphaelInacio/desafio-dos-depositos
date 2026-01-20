@@ -126,6 +126,7 @@
 -   Payment Gateway integration for R$ 4,99 upgrade.
 
 ### Phase 2 (Enhancement)
+-   **Savings Journal** (Upload de Recibos) - Requires Firebase Storage / Blaze plan.
 -   Multiple Challenge Types (e.g., "52 Weeks Challenge").
 -   Advanced Analytics.
 -   Leaderboards (if community features are added).

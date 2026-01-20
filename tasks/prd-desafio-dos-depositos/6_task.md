@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 ---
 
 # Task 6.0: Social Share (Imagem Fixa)
