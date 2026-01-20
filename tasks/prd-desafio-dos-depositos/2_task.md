@@ -23,13 +23,13 @@ Implementar as páginas de Login, Register e AuthContext no frontend React, util
 
 ## Subtasks
 
-- [ ] 2.1 Criar `src/contexts/AuthContext.tsx` com provider
-- [ ] 2.2 Criar `src/services/authService.ts` (signup, login, logout, resetPassword)
-- [ ] 2.3 Criar página `src/pages/Login.tsx`
-- [ ] 2.4 Criar página `src/pages/Register.tsx` (com campo referralCode opcional)
-- [ ] 2.5 Criar componente `ProtectedRoute.tsx` para rotas autenticadas
-- [ ] 2.6 Atualizar `App.tsx` com AuthProvider e novas rotas
-- [ ] 2.7 Criar `src/services/userService.ts` com `createUserDocument()`
+- [ ] 2.1 Criar `frontend/src/contexts/AuthContext.tsx` com provider
+- [ ] 2.2 Criar `frontend/src/services/authService.ts` (signup, login, logout, resetPassword)
+- [ ] 2.3 Criar página `frontend/src/pages/Login.tsx`
+- [ ] 2.4 Criar página `frontend/src/pages/Register.tsx` (com campo referralCode opcional)
+- [ ] 2.5 Criar componente `frontend/src/components/ProtectedRoute.tsx` para rotas autenticadas
+- [ ] 2.6 Atualizar `frontend/src/App.tsx` com AuthProvider e novas rotas
+- [ ] 2.7 Criar `frontend/src/services/userService.ts` com `createUserDocument()`
 - [ ] 2.8 No Register, ao criar conta, criar documento em `users/{uid}` no Firestore
 - [ ] 2.9 Implementar testes unitários para authService
 - [ ] 2.10 Testar fluxo completo: Register → Auto-login → Redirect para home

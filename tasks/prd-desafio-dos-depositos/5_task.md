@@ -22,12 +22,12 @@ Implementar a funcionalidade de upload de fotos (recibos) ao marcar um depósito
 
 ## Subtasks
 
-- [ ] 5.1 Criar `src/services/storageService.ts` com `uploadReceipt()`
+- [ ] 5.1 Criar `frontend/src/services/storageService.ts` com `uploadReceipt()`
 - [ ] 5.2 Implementar compressão de imagem client-side (canvas resize)
-- [ ] 5.3 Modificar `DepositCard.tsx` para incluir botão de anexar foto
-- [ ] 5.4 Criar modal `ReceiptUploadModal.tsx`
+- [ ] 5.3 Modificar `frontend/src/components/DepositCard.tsx` para incluir botão de anexar foto
+- [ ] 5.4 Criar modal `frontend/src/components/ReceiptUploadModal.tsx`
 - [ ] 5.5 Ao fazer upload, atualizar `deposit.receiptImageUrl` no Firestore
-- [ ] 5.6 Criar componente `ReceiptGallery.tsx` com grid de imagens
+- [ ] 5.6 Criar componente `frontend/src/components/ReceiptGallery.tsx` com grid de imagens
 - [ ] 5.7 Adicionar rota/tab para acessar galeria do challenge
 - [ ] 5.8 Implementar preview da imagem antes do upload
 - [ ] 5.9 Adicionar loading state durante upload

@@ -271,6 +271,58 @@ async function shareProgress(challenge: Challenge, stats: ChallengeStats) {
 
 ---
 
+## Ad System (Google AdSense)
+
+### Overview
+
+Usuários free veem ads (banner + intersticial). Desafios pagos (R$ 4,99) são ad-free.
+
+### Tipos de Ads
+
+| Tipo | Localização | Frequência | Condição |
+|------|------------|------------|----------|
+| Banner | Rodapé (`AdBanner.tsx`) | Sempre visível | `challenge.isPaid === false` |
+| Intersticial | Após `markDeposit()` | 1 a cada 3 depósitos | `!isPaid && counter % 3 === 0` |
+
+### Challenge Model Update
+
+```typescript
+interface Challenge {
+  // ... campos existentes
+  isPaid: boolean;              // true = desafio comprado, sem ads
+  adsDepositCounter: number;    // contador para frequência de intersticiais
+}
+```
+
+### Componentes Frontend
+
+```typescript
+// frontend/src/components/ads/AdBanner.tsx
+export function AdBanner({ challenge }: { challenge: Challenge }) {
+  if (challenge.isPaid) return null;
+  return <ins className="adsbygoogle" data-ad-slot="xxx" />;
+}
+
+// frontend/src/hooks/useInterstitialAd.ts
+export function useInterstitialAd() {
+  const showAd = async (): Promise<void> => {
+    // Google AdSense interstitial logic
+  };
+  return { showAd };
+}
+```
+
+### Fluxo de Integração
+
+1. Usuário marca depósito
+2. `challengeService.markDeposit()` incrementa `adsDepositCounter`
+3. Se `counter % 3 === 0` e `!challenge.isPaid`:
+   - Exibe intersticial
+   - Após fechar, salva no Firestore
+4. Banner permanece visível no footer enquanto `!isPaid`
+
+---
+
 ## Testing Approach
 
 ### Unit Tests (Frontend)

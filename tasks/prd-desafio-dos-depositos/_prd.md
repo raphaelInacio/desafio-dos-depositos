@@ -32,6 +32,8 @@
 | **US9** | New User | Enjoy a 3-day free trial of Premium features | I can experience the full value before deciding to pay. |
 | **US10** | User | Upload a photo/screenshot (receipt) for a deposit | I can prove to myself (and others) that I actually saved the money. |
 | **US11** | User | View a "Gallery" of all my receipts | I can visualize my journey and feel proud of the "pile" of savings. |
+| **US12** | Free User | Ver anúncios durante o uso do app | Posso usar o app gratuitamente. |
+| **US13** | Paid User | Usar um desafio sem anúncios | Tenho uma experiência limpa e focada. |
 
 ## Core Features
 
@@ -73,17 +75,28 @@
     -   Channels: Native share sheet (WhatsApp, Instagram Stories, Download Image).
 -   **Referral**: "Challenge a Friend" button with a deep link to the homepage.
 
-### 6. Monetization (Low-Ticket Premium)
--   **Price Point**: R$ 4,99 (One-time payment).
--   **Trial Period**: New users receive a **3-day free trial** of all Premium features upon signup. After 3 days, they are downgraded to the Free Tier unless they pay.
--   **Free Tier Restrictions**:
-    -   Max 1 active challenge.
-    -   Standard theme only (no customization).
-    -   Ads (Optional future consideration).
--   **Premium Benefits**:
-    -   Unlimited active challenges.
-    -   Unlock all color themes (Dark Mode, Pastel, Neon).
-    -   Detailed history/analytics chart.
+### 6. Monetization (Ads + Pay-Per-Challenge)
+
+**Modelo Híbrido: Ads + Pagamento por Desafio**
+
+#### Ads (Usuários Free)
+-   **Banner Fixo**: Rodapé (320x50) visível em todas as páginas principais.
+-   **Intersticial**: Exibido após marcar depósito, a cada **3 depósitos** marcados.
+-   **Provider**: Google AdSense (Web).
+
+#### Modelo de Pagamento
+-   **Price Point**: R$ 4,99 por desafio (pagamento único por challenge).
+-   **Trial Period**: Novo usuário recebe **1 desafio grátis** (com ads) para experimentar.
+
+#### Free Tier
+-   **1 desafio ativo** (o trial).
+-   Tema padrão apenas.
+-   **COM ADS** (banner + intersticial a cada 3 depósitos).
+
+#### Paid User Benefits (por desafio comprado)
+-   **SEM ADS** no desafio pago.
+-   Acesso a temas exclusivos (Dark Mode, Pastel, Neon).
+-   Analytics avançados.
 
 ## User Experience
 

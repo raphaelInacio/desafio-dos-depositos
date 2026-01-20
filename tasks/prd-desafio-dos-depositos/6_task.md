@@ -21,9 +21,9 @@ Implementar o botão de compartilhamento com imagem fixa e texto dinâmico usand
 
 ## Subtasks
 
-- [ ] 6.1 Criar imagem estática para share em `public/share/challenge-share.png`
-- [ ] 6.2 Criar `src/services/shareService.ts` com `shareProgress()`
-- [ ] 6.3 Adicionar botão de share no `ProgressHeader.tsx`
+- [ ] 6.1 Criar imagem estática para share em `frontend/public/share/challenge-share.png`
+- [ ] 6.2 Criar `frontend/src/services/shareService.ts` com `shareProgress()`
+- [ ] 6.3 Adicionar botão de share no `frontend/src/components/ProgressHeader.tsx`
 - [ ] 6.4 Implementar fallback (copiar texto + toast de confirmação)
 - [ ] 6.5 Adicionar analytics event ao compartilhar (console.log por ora)
 - [ ] 6.6 Testar em dispositivo móvel (WhatsApp, Instagram)

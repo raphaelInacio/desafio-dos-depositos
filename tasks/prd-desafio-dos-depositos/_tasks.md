@@ -15,9 +15,9 @@
 │                  │        │                  │        │   (Independente) │
 │  2.0 Auth UI     │        │  4.0 Backend     │        │  6.0 Social      │
 │       ↓          │        │  Base + Payment  │        │      Share       │
-│  3.0 Cloud Sync  │        │                  │        └──────────────────┘
-│       ↓          │        └──────────────────┘
-│  5.0 Savings     │
+│  3.0 Cloud Sync  │        │                  │        │       ↓          │
+│       ↓          │        └──────────────────┘        │  10.0 Ad System  │
+│  5.0 Savings     │                                    └──────────────────┘
 │     Journal      │
 └──────────────────┘
            │                           │
@@ -58,6 +58,7 @@
 **Track C - Independent Frontend:**
 - [ ] 5.0 Savings Journal (Upload Recibos)
 - [ ] 6.0 Social Share (Imagem Fixa)
+- [ ] 10.0 Ad System Integration (Google AdSense) ← **NEW**
 
 ### Phase 3: Integration Features
 - [ ] 7.0 Referral System
@@ -75,11 +76,13 @@
 | Task | Depends On | Can Parallel With |
 |------|------------|-------------------|
 | 1.0 Firebase Setup | - | - |
-| 2.0 Auth UI | 1.0 | 4.0, 5.0, 6.0 |
-| 3.0 Cloud Sync | 2.0 | 4.0, 5.0, 6.0 |
-| 4.0 Backend + Payment | 1.0 | 2.0, 3.0, 5.0, 6.0 |
-| 5.0 Savings Journal | 1.0 | 2.0, 3.0, 4.0, 6.0 |
-| 6.0 Social Share | - (MVP exists) | 2.0, 3.0, 4.0, 5.0 |
+| 2.0 Auth UI | 1.0 | 4.0, 5.0, 6.0, 10.0 |
+| 3.0 Cloud Sync | 2.0 | 4.0, 5.0, 6.0, 10.0 |
+| 4.0 Backend + Payment | 1.0 | 2.0, 3.0, 5.0, 6.0, 10.0 |
+| 5.0 Savings Journal | 1.0 | 2.0, 3.0, 4.0, 6.0, 10.0 |
+| 6.0 Social Share | - (MVP exists) | 2.0, 3.0, 4.0, 5.0, 10.0 |
 | 7.0 Referral | 2.0, 3.0 | - |
 | 8.0 Premium | 4.0, 7.0 | - |
 | 9.0 E2E Tests | All above | - |
+| **10.0 Ad System** | 1.0, 3.0 | 4.0, 5.0, 6.0 |
+

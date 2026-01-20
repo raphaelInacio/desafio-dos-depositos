@@ -22,12 +22,12 @@ Migrar a persistência de challenges e deposits de localStorage para Firestore, 
 
 ## Subtasks
 
-- [ ] 3.1 Criar `src/services/challengeService.ts` com CRUD Firestore
+- [ ] 3.1 Criar `frontend/src/services/challengeService.ts` com CRUD Firestore
 - [ ] 3.2 Implementar `createChallenge()` que cria challenge + deposits batch
 - [ ] 3.3 Implementar `getChallenges()` com query por userId
 - [ ] 3.4 Implementar `getDeposits()` para subcollection
 - [ ] 3.5 Implementar `updateDeposit()` para toggle isPaid
-- [ ] 3.6 Refatorar `useChallengeStore.ts` para usar Firestore
+- [ ] 3.6 Refatorar `frontend/src/hooks/useChallengeStore.ts` para usar Firestore
 - [ ] 3.7 Adicionar listener realtime com `onSnapshot`
 - [ ] 3.8 Manter fallback para localStorage se não autenticado (modo offline)
 - [ ] 3.9 Implementar testes unitários para challengeService
