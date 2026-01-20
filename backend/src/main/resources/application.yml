@@ -11,6 +11,7 @@ asaas:
   checkout:
     success-url: ${FRONTEND_URL}/payment/success
     cancel-url: ${FRONTEND_URL}/payment/cancel
+  webhook-token: ${ASAAS_WEBHOOK_TOKEN}
 
 firebase:
   service-account: ${FIREBASE_SERVICE_ACCOUNT_PATH:src/main/resources/firebase-service-account.json}

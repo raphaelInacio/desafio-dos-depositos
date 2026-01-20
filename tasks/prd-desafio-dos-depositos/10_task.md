@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 ---
 
 # Task 10.0: Ad System Integration (Google AdSense)
@@ -22,16 +22,16 @@ Implementar sistema de anúncios para usuários free, com banner fixo no rodapé
 
 ## Subtasks
 
-- [ ] 10.1 Criar conta Google AdSense e obter ad-unit IDs
-- [ ] 10.2 Criar `frontend/src/components/ads/AdBanner.tsx`
-- [ ] 10.3 Criar `frontend/src/hooks/useInterstitialAd.ts`
-- [ ] 10.4 Atualizar model `Challenge` com campos `isPaid` e `adsDepositCounter`
-- [ ] 10.5 Modificar `frontend/src/services/challengeService.ts` para incrementar contador
-- [ ] 10.6 Integrar `AdBanner` no layout principal (`frontend/src/App.tsx` ou `Layout.tsx`)
-- [ ] 10.7 Integrar lógica de intersticial em `markDeposit()`
-- [ ] 10.8 Adicionar script do AdSense no `frontend/index.html`
-- [ ] 10.9 Testar exibição de ads em ambiente de desenvolvimento
-- [ ] 10.10 Verificar que desafios pagos não exibem ads
+- [x] 10.1 Criar conta Google AdSense e obter ad-unit IDs
+- [x] 10.2 Criar `frontend/src/components/ads/AdBanner.tsx`
+- [x] 10.3 Criar `frontend/src/hooks/useInterstitialAd.ts`
+- [x] 10.4 Atualizar model `Challenge` com campos `isPaid` e `adsDepositCounter`
+- [x] 10.5 Modificar `frontend/src/services/challengeService.ts` para incrementar contador
+- [x] 10.6 Integrar `AdBanner` no layout principal (`frontend/src/App.tsx` ou `Layout.tsx`)
+- [x] 10.7 Integrar lógica de intersticial em `markDeposit()`
+- [x] 10.8 Adicionar script do AdSense no `frontend/index.html`
+- [x] 10.9 Testar exibição de ads em ambiente de desenvolvimento
+- [x] 10.10 Verificar que desafios pagos não exibem ads
 
 ## Implementation Details
 

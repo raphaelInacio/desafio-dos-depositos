@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 ---
 
 # Task 4.0: Backend Setup + Payment Integration
@@ -23,18 +23,18 @@ Criar o backend Spring Boot com Firebase Admin SDK para processar pagamentos via
 
 ## Subtasks
 
-- [ ] 4.1 Criar projeto Spring Boot (Maven, Java 17+)
-- [ ] 4.2 Adicionar dependências: Firebase Admin, Spring Web, Lombok
-- [ ] 4.3 Configurar Firebase Admin SDK com service account JSON
-- [ ] 4.4 Criar `PaymentController` com endpoint `/api/checkout`
-- [ ] 4.5 Criar `AsaasService` para chamar API de checkout session
-- [ ] 4.6 Criar `WebhookController` para `/api/webhooks/asaas`
-- [ ] 4.7 Implementar `handlePaymentConfirmed()` que atualiza Firestore
-- [ ] 4.8 Adicionar validação de assinatura do webhook Asaas
-- [ ] 4.9 Configurar CORS para aceitar requests do frontend
-- [ ] 4.10 Criar Dockerfile para deploy
-- [ ] 4.11 Implementar testes unitários e de integração
-- [ ] 4.12 Testar fluxo completo no sandbox Asaas
+- [x] 4.1 Criar projeto Spring Boot (Maven, Java 17+)
+- [x] 4.2 Adicionar dependências: Firebase Admin, Spring Web, Lombok
+- [x] 4.3 Configurar Firebase Admin SDK com service account JSON
+- [x] 4.4 Criar `PaymentController` com endpoint `/api/checkout`
+- [x] 4.5 Criar `AsaasService` para chamar API de checkout session
+- [x] 4.6 Criar `WebhookController` para `/api/webhooks/asaas`
+- [x] 4.7 Implementar `handlePaymentConfirmed()` que atualiza Firestore
+- [x] 4.8 Adicionar validação de assinatura do webhook Asaas
+- [x] 4.9 Configurar CORS para aceitar requests do frontend
+- [x] 4.10 Criar Dockerfile para deploy
+- [x] 4.11 Implementar testes unitários e de integração
+- [x] 4.12 Testar fluxo completo no sandbox Asaas
 
 ## Implementation Details
 

@@ -26,6 +26,7 @@ vi.mock("firebase/firestore", async () => {
         writeBatch: vi.fn(),
         onSnapshot: vi.fn(),
         Timestamp: actual.Timestamp,
+        increment: vi.fn(),
     };
 });
 
@@ -80,7 +81,10 @@ describe("challengeService", () => {
             expect(result.name).toBe("Teste Challenge");
             expect(result.targetAmount).toBe(1000);
             expect(result.numberOfDeposits).toBe(10);
+            expect(result.numberOfDeposits).toBe(10);
             expect(result.deposits).toHaveLength(10);
+            expect(result.isPaid).toBe(false);
+            expect(result.adsDepositCounter).toBe(0);
             expect(mockBatch.commit).toHaveBeenCalledOnce();
             expect(mockBatch.set).toHaveBeenCalledTimes(11); // 1 challenge + 10 deposits
         });
@@ -199,9 +203,16 @@ describe("challengeService", () => {
                 paidAt: now,
             });
 
-            expect(mockUpdateDoc).toHaveBeenCalledOnce();
+
             expect(mockUpdateDoc.mock.calls[0][1]).toHaveProperty("isPaid", true);
             expect(mockUpdateDoc.mock.calls[0][1].paidAt).toBeInstanceOf(Timestamp);
+
+            // Verify counter increment
+            expect(mockUpdateDoc).toHaveBeenCalledTimes(2);
+            expect(mockUpdateDoc.mock.calls[1][1]).toEqual({
+                adsDepositCounter: undefined, // increment returns undefined in mock unless implemented
+            });
+            expect(firestore.increment).toHaveBeenCalledWith(1);
         });
 
         it("should handle partial updates", async () => {

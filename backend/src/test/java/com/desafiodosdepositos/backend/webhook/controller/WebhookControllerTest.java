@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
@@ -19,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(WebhookController.class)
+@TestPropertySource(properties = "asaas.webhook-token=valid-token")
 class WebhookControllerTest {
 
     @Autowired
@@ -49,6 +51,7 @@ class WebhookControllerTest {
 
         // Act & Assert
         mockMvc.perform(post("/api/webhooks/asaas")
+                .header("asaas-access-token", "valid-token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(event)))
                 .andExpect(status().isOk());
@@ -69,6 +72,7 @@ class WebhookControllerTest {
 
         // Act & Assert
         mockMvc.perform(post("/api/webhooks/asaas")
+                .header("asaas-access-token", "valid-token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(event)))
                 .andExpect(status().isOk());
@@ -90,9 +94,26 @@ class WebhookControllerTest {
 
         // Act & Assert
         mockMvc.perform(post("/api/webhooks/asaas")
+                .header("asaas-access-token", "valid-token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(event)))
                 .andExpect(status().isBadRequest());
+
+        verify(paymentService, never()).activatePremium(anyString());
+    }
+
+    @Test
+    void handleAsaasWebhook_InvalidToken() throws Exception {
+        // Arrange
+        AsaasWebhookEvent event = new AsaasWebhookEvent();
+        event.setEvent("PAYMENT_CONFIRMED");
+
+        // Act & Assert
+        mockMvc.perform(post("/api/webhooks/asaas")
+                .header("asaas-access-token", "wrong-token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(event)))
+                .andExpect(status().isUnauthorized());
 
         verify(paymentService, never()).activatePremium(anyString());
     }

@@ -16,6 +16,8 @@ export interface Challenge {
   deposits: Deposit[];
   createdAt: Date;
   completedAt?: Date;
+  isPaid: boolean;
+  adsDepositCounter: number;
 }
 
 export interface ChallengeStats {

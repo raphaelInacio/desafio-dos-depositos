@@ -12,6 +12,7 @@ import {
     onSnapshot,
     Timestamp,
     Unsubscribe,
+    increment,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { Challenge, Deposit } from "@/types/challenge";
@@ -41,6 +42,8 @@ function firestoreToChallenge(id: string, data: any): Challenge {
         deposits: [], // Deposits carregados separadamente
         createdAt: data.createdAt?.toDate() || new Date(),
         completedAt: data.completedAt?.toDate(),
+        isPaid: data.isPaid || false,
+        adsDepositCounter: data.adsDepositCounter || 0,
     };
 }
 
@@ -69,6 +72,8 @@ function challengeToFirestore(challenge: Omit<Challenge, "deposits">) {
         mode: challenge.mode,
         createdAt: Timestamp.fromDate(challenge.createdAt),
         completedAt: challenge.completedAt ? Timestamp.fromDate(challenge.completedAt) : null,
+        isPaid: challenge.isPaid,
+        adsDepositCounter: challenge.adsDepositCounter,
     };
 }
 
@@ -96,6 +101,49 @@ export async function createChallenge(
 ): Promise<Challenge> {
     const challengeRef = doc(collection(db, `users/${uid}/challenges`));
 
+    // Check user data for referral logic
+    const userRef = doc(db, "users", uid);
+    const userSnap = await getDoc(userRef);
+
+    // Default challenge state
+    let isPaid = false;
+    let adsDepositCounter = 0;
+
+    if (userSnap.exists()) {
+        const userData = userSnap.data();
+
+        // 1. CONSUME REWARD Logic
+        // If user has a claimed reward, this challenge is FREE (isPaid=true)
+        if (userData.referralRewardClaimed) {
+            isPaid = true;
+            // Reset reward claimed status
+            await updateDoc(userRef, { referralRewardClaimed: false });
+        }
+
+        // 2. GRANT REWARD Logic
+        // Check if this is the FIRST challenge ever created by this user
+        const challengesQuery = query(collection(db, `users/${uid}/challenges`));
+        const challengesSnap = await getDocs(challengesQuery);
+
+        // If snapshot is empty (or only contains the one we are about to create - but we haven't created it yet), 
+        // wait, we are inside createChallenge, we haven't committed batch yet. 
+        // But `challengesQuery` runs against DB.
+
+        if (challengesSnap.empty && userData.referredBy) {
+            // This is the first challenge! Check referrer.
+            const referrerRef = doc(db, "users", userData.referredBy);
+            const referrerSnap = await getDoc(referrerRef);
+
+            if (referrerSnap.exists()) {
+                // Grant reward to referrer
+                await updateDoc(referrerRef, {
+                    referralRewardClaimed: true,
+                    trialExpiresAt: null // Infinite trial logic for next challenge uses referralRewardClaimed
+                });
+            }
+        }
+    }
+
     const challenge: Omit<Challenge, "deposits"> = {
         id: challengeRef.id,
         name: input.name,
@@ -103,6 +151,8 @@ export async function createChallenge(
         numberOfDeposits: input.numberOfDeposits,
         mode: input.mode,
         createdAt: new Date(),
+        isPaid: isPaid,
+        adsDepositCounter: adsDepositCounter,
     };
 
     // Gerar deposits usando a função utilitária existente
@@ -231,6 +281,14 @@ export async function updateDeposit(
     }
 
     await updateDoc(depositRef, firestoreUpdates);
+
+    // Se o depósito foi marcado como pago, incrementar o contador de ads no challenge
+    if (updates.isPaid === true) {
+        const challengeRef = doc(db, `users/${uid}/challenges/${challengeId}`);
+        await updateDoc(challengeRef, {
+            adsDepositCounter: increment(1)
+        });
+    }
 }
 
 /**

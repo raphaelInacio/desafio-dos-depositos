@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-import { doc, setDoc, getDoc, Timestamp, updateDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, Timestamp, updateDoc, query, collection, where, getDocs } from "firebase/firestore";
 import { User } from "firebase/auth";
 
 export interface UserData {
@@ -33,12 +33,32 @@ export const createUserDocument = async (user: User, displayName: string, referr
         const trialExpiresAt = new Date();
         trialExpiresAt.setDate(trialExpiresAt.getDate() + 3);
 
+        let uniqueReferralCode = "";
+        let isUnique = false;
+        let attempts = 0;
+
+        while (!isUnique && attempts < 5) {
+            uniqueReferralCode = generateReferralCode();
+            const q = query(collection(db, "users"), where("referralCode", "==", uniqueReferralCode));
+            const querySnapshot = await getDocs(q);
+            if (querySnapshot.empty) {
+                isUnique = true;
+            }
+            attempts++;
+        }
+
+        if (!isUnique) {
+            // Fallback or error handling if needed, but 8 chars is huge space
+            console.error("Failed to generate unique referral code after 5 attempts");
+            // Proceed anyway to not block user, collision extremely unlikely
+        }
+
         const userData: UserData = {
             email: user.email,
             displayName: displayName,
             isPremium: false,
             trialExpiresAt: Timestamp.fromDate(trialExpiresAt),
-            referralCode: generateReferralCode(),
+            referralCode: uniqueReferralCode,
             referredBy: referralCodeArg || null,
             referralRewardClaimed: false,
             asaasCustomerId: null,

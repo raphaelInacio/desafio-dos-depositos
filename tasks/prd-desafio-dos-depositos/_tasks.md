@@ -53,11 +53,11 @@
 - [x] 3.0 Cloud Sync Migration (Firestore)
 
 **Track B - Backend:**
-- [ ] 4.0 Backend Setup + Payment Integration
+- [x] 4.0 Backend Setup + Payment Integration
 
 **Track C - Independent Frontend:**
-- [ ] 6.0 Social Share (Imagem Fixa)
-- [ ] 10.0 Ad System Integration (Google AdSense) ← **NEW**
+- [X] 6.0 Social Share (Imagem Fixa)
+- [x] 10.0 Ad System Integration (Google AdSense) ← **NEW**
 
 ### Phase 3: Integration Features
 - [ ] 7.0 Referral System
