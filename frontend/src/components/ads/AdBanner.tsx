@@ -21,9 +21,9 @@ export function AdBanner({ challenge }: AdBannerProps) {
             <ins
                 className="adsbygoogle"
                 style={{ display: 'block' }}
-                data-ad-client="ca-pub-XXXXX"
-                data-ad-slot="XXXXX"
-                data-ad-format="horizontal"
+                data-ad-client="ca-pub-9811695349836486"
+                data-ad-slot="7145238014"
+                data-ad-format="auto"
                 data-full-width-responsive="true"
             />
         </div>

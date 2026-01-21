@@ -1,5 +1,10 @@
 import { useState } from 'react';
-import { HeroSection } from '@/components/HeroSection';
+import { LandingNavbar } from '@/components/landing/LandingNavbar';
+import { LandingHero } from '@/components/landing/LandingHero';
+import { HowItWorks } from '@/components/landing/HowItWorks';
+import { GallerySection } from '@/components/landing/GallerySection';
+import { PricingSection } from '@/components/landing/PricingSection';
+import { LandingFooter } from '@/components/landing/LandingFooter';
 import { ChallengeTracker } from '@/components/ChallengeTracker';
 import { CreateChallengeModal } from '@/components/CreateChallengeModal';
 import { ReferralCard } from '@/components/ReferralCard';
@@ -78,7 +83,13 @@ const Index = () => {
   if (!challenge) {
     return (
       <>
-        <HeroSection onStartChallenge={() => setShowCreateModal(true)} />
+        <LandingNavbar />
+        <LandingHero onStart={() => setShowCreateModal(true)} />
+        <HowItWorks />
+        <GallerySection />
+        <PricingSection />
+        <LandingFooter onStart={() => setShowCreateModal(true)} />
+
         <CreateChallengeModal
           isOpen={showCreateModal}
           onClose={() => setShowCreateModal(false)}

@@ -23,8 +23,8 @@ export function DepositCard({ deposit, onToggle, index }: DepositCardProps) {
         'flex flex-col items-center justify-center gap-1',
         'focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
         deposit.isPaid
-          ? 'border-success bg-success text-success-foreground shadow-glow'
-          : 'border-border bg-card text-card-foreground hover:border-primary/50 hover:shadow-card'
+          ? 'border-emerald bg-emerald text-white shadow-tactile translate-x-[2px] translate-y-[2px] active:translate-x-0 active:translate-y-0 active:shadow-sm'
+          : 'border-black/10 bg-white text-text hover:border-pink hover:text-pink hover:shadow-md'
       )}
     >
       {deposit.isPaid && (
@@ -32,18 +32,20 @@ export function DepositCard({ deposit, onToggle, index }: DepositCardProps) {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: 'spring', stiffness: 500, damping: 25 }}
-          className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-gold text-gold-foreground"
+          className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-[#fbbf24] to-gold text-white shadow-sm"
         >
           <Check className="h-3 w-3" strokeWidth={3} />
         </motion.div>
       )}
-      
-      <span className="text-xs font-medium opacity-60">#{deposit.id}</span>
+
+      <span className="font-headline font-extrabold text-sm leading-none pt-1">
+        {formatCurrency(deposit.value).replace('R$', '')}
+      </span>
       <span className={cn(
-        'text-sm font-bold leading-none',
-        deposit.isPaid && 'line-through opacity-70'
+        'text-[10px] font-subhead uppercase tracking-wider opacity-60',
+        deposit.isPaid ? 'text-white' : 'text-text-light'
       )}>
-        {formatCurrency(deposit.value)}
+        {deposit.isPaid ? 'Pago' : 'Poupar'}
       </span>
     </motion.button>
   );

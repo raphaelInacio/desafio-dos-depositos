@@ -57,29 +57,48 @@ export function ChallengeTracker({ challenge, onToggleDeposit, onReset }: Challe
   }, [onToggleDeposit]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-offwhite">
       {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-border bg-background/80 px-4 py-3 backdrop-blur-lg">
+      <header className="sticky top-0 z-40 border-b border-black/5 bg-white/90 px-4 py-4 backdrop-blur-md shadow-sm">
         <div className="mx-auto flex max-w-4xl items-center justify-between">
-          <h1 className="text-lg font-bold text-gradient-hero">Desafio</h1>
+          {/* Challenge Name as Title */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-emerald to-gold rounded-full flex items-center justify-center text-xl shadow-sm">
+              💰
+            </div>
+            <div>
+              <h1 className="font-headline font-extrabold text-lg leading-tight text-text">
+                {challenge.name}
+              </h1>
+              <p className="text-[10px] uppercase tracking-wider font-bold text-text-light">
+                {stats.progressPercentage}% concluído
+              </p>
+            </div>
+          </div>
+
           <div className="flex items-center gap-2">
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-muted-foreground">
-                  <RotateCcw className="h-5 w-5" />
+                <Button
+                  variant="ghost"
+                  className="text-pink font-bold hover:text-pink/80 hover:bg-pink/5 gap-2"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                  <span className="hidden sm:inline">Reiniciar</span>
+                  <span className="sm:hidden">Novo</span>
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent>
+              <AlertDialogContent className="rounded-2xl border-2 border-black/5 shadow-card">
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Reiniciar desafio?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Isso irá apagar todo o seu progresso atual. Esta ação não pode ser desfeita.
+                  <AlertDialogTitle className="font-headline font-extrabold text-2xl">Começar um novo desafio?</AlertDialogTitle>
+                  <AlertDialogDescription className="text-text-light font-subhead text-base">
+                    Isso irá apagar todo o seu progresso atual em <strong className="text-text">{challenge.name}</strong>. Esta ação não pode ser desfeita.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                  <AlertDialogAction onClick={onReset} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                    Reiniciar
+                  <AlertDialogCancel className="rounded-xl font-bold border-2 border-black/10">Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={onReset} className="bg-destructive hover:bg-destructive/90 text-white font-bold rounded-xl shadow-sm">
+                    Sim, reiniciar
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
