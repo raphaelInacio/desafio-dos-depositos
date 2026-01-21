@@ -2,7 +2,11 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Check, X } from 'lucide-react';
 
-export function PricingSection() {
+interface PricingSectionProps {
+    onStart: () => void;
+}
+
+export function PricingSection({ onStart }: PricingSectionProps) {
     return (
         <section className="py-20 px-8 bg-offwhite relative" id="pricing">
             {/* Gold Shapes Decoration */}
@@ -54,6 +58,7 @@ export function PricingSection() {
                         </ul>
 
                         <Button
+                            onClick={onStart}
                             className="w-full py-6 bg-transparent hover:bg-text text-text hover:text-white border-2 border-text font-subhead font-bold rounded-xl transition-all"
                         >
                             Começar Grátis
@@ -100,6 +105,7 @@ export function PricingSection() {
                         </ul>
 
                         <Button
+                            onClick={onStart}
                             className="w-full py-6 bg-gradient-to-br from-gold to-[#fbbf24] text-dark shadow-[0_4px_20px_rgba(245,158,11,0.3)] hover:shadow-lg font-subhead font-bold rounded-xl transition-all relative z-10"
                         >
                             Assinar Premium

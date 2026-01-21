@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { LandingNavbar } from '@/components/landing/LandingNavbar';
 import { LandingHero } from '@/components/landing/LandingHero';
 import { HowItWorks } from '@/components/landing/HowItWorks';
@@ -34,6 +35,15 @@ const Index = () => {
   const { showAd } = useInterstitialAd();
   const { userData } = useUserData();
   const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleStartChallenge = () => {
+    if (!user) {
+      navigate('/register');
+      return;
+    }
+    setShowCreateModal(true);
+  };
 
   const handleCreateChallenge = (
     name: string,
@@ -47,6 +57,10 @@ const Index = () => {
   };
 
   const onNewChallengeClick = () => {
+    if (!user) {
+      navigate('/register');
+      return;
+    }
     // Check limits
     const currentCount = challenges ? challenges.length : (challenge ? 1 : 0);
     if (canCreateChallenge(userData, currentCount)) {
@@ -83,12 +97,13 @@ const Index = () => {
   if (!challenge) {
     return (
       <>
-        <LandingNavbar />
-        <LandingHero onStart={() => setShowCreateModal(true)} />
+        <LandingNavbar onStart={handleStartChallenge} />
+        <LandingHero onStart={handleStartChallenge} />
         <HowItWorks />
         <GallerySection />
-        <PricingSection />
-        <LandingFooter onStart={() => setShowCreateModal(true)} />
+        <PricingSection onStart={handleStartChallenge} />
+        <LandingFooter onStart={handleStartChallenge} />
+
 
         <CreateChallengeModal
           isOpen={showCreateModal}
@@ -102,56 +117,15 @@ const Index = () => {
   // Show the tracker if a challenge exists
   return (
     <>
-      {/* Top Bar for Multi-Challenge */}
-      {challenges && challenges.length > 0 && (
-        <div className="container max-w-md mx-auto px-4 pt-4 flex items-center justify-between">
-          {challenges.length > 1 ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-2 max-w-[200px]">
-                  <span className="truncate">{challenge.name}</span>
-                  <ChevronDown className="w-4 h-4 opacity-50" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start">
-                {challenges.map(c => (
-                  <DropdownMenuItem key={c.id} onClick={() => selectChallenge(c.id)}>
-                    {c.name} {c.isPaid && "✨"}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <div className="font-semibold text-lg truncate max-w-[200px]">{challenge.name}</div>
-          )}
-
-          <Button size="sm" variant="ghost" className="text-primary gap-1" onClick={onNewChallengeClick}>
-            <Plus className="w-4 h-4" /> Novo
-          </Button>
-        </div>
-      )}
-
       <ChallengeTracker
         challenge={challenge}
+        challenges={challenges}
         onToggleDeposit={handleToggleDeposit}
         onReset={resetChallenge}
+        onSelectChallenge={selectChallenge}
+        onNewChallenge={onNewChallengeClick}
+        userData={userData}
       />
-
-      {/* Show Referral Card if authenticated */}
-      {user && userData && (
-        <div className="container max-w-md mx-auto px-4 pb-20 space-y-6">
-          <ReferralCard
-            referralCode={userData.referralCode}
-            hasAvailableReward={userData.referralRewardClaimed}
-            className="mt-6"
-          />
-
-          <div className="bg-card rounded-2xl p-6 shadow-sm border space-y-4">
-            <h3 className="font-semibold text-lg">Personalização</h3>
-            <ThemeSelector />
-          </div>
-        </div>
-      )}
 
       <AdBanner challenge={challenge} />
 
