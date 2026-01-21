@@ -18,6 +18,7 @@ import { db } from "./firebase";
 import { Challenge, Deposit } from "@/types/challenge";
 import { generateDeposits } from "@/lib/challengeUtils";
 import { UserData } from "./userService";
+import { api } from "./api";
 
 // ==================== TYPES ====================
 
@@ -132,15 +133,12 @@ export async function createChallenge(
 
         if (challengesSnap.empty && userData.referredBy) {
             // This is the first challenge! Check referrer.
-            const referrerRef = doc(db, "users", userData.referredBy);
-            const referrerSnap = await getDoc(referrerRef);
-
-            if (referrerSnap.exists()) {
-                // Grant reward to referrer
-                await updateDoc(referrerRef, {
-                    referralRewardClaimed: true,
-                    trialExpiresAt: null // Infinite trial logic for next challenge uses referralRewardClaimed
-                });
+            // SECURITY FIX: Call backend to grant reward instead of updating doc directly
+            try {
+                await api.post('/referral/reward', { referrerId: userData.referredBy });
+            } catch (error) {
+                console.error("Failed to grant referral reward via API", error);
+                // Fail silently? Or retry? For MVP silent fail is safer than crashing flow.
             }
         }
     }
@@ -413,4 +411,20 @@ export function subscribeToChallenges(
             }
         }
     );
+}
+
+/**
+ * Verifica se o usuário pode criar um novo desafio
+ */
+export function canCreateChallenge(
+    user: UserData | null,
+    currentChallengeCount: number
+): boolean {
+    if (!user) return false;
+
+    // Premium users can create challenges without limit (logic to be expanded in Task 8.0)
+    if (user.isPremium) return true;
+
+    // Free users: limit to 1 active challenge
+    return currentChallengeCount < 1;
 }

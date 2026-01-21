@@ -35,4 +35,9 @@ public class FirebaseConfig {
         log.info("Firebase Admin SDK already initialized");
         return FirebaseApp.getInstance();
     }
+
+    @Bean
+    public com.google.cloud.firestore.Firestore firestore(FirebaseApp firebaseApp) {
+        return com.google.firebase.cloud.FirestoreClient.getFirestore(firebaseApp);
+    }
 }
