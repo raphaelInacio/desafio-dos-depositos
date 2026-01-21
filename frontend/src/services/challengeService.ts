@@ -17,6 +17,7 @@ import {
 import { db } from "./firebase";
 import { Challenge, Deposit } from "@/types/challenge";
 import { generateDeposits } from "@/lib/challengeUtils";
+import { UserData } from "./userService";
 
 // ==================== TYPES ====================
 

@@ -21,6 +21,7 @@ public class CorsConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // Permitir frontend em dev e produção
+        configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:5173",
                 "https://desafio-depositos-app.web.app",
                 frontendUrl));
