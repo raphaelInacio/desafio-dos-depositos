@@ -2,9 +2,10 @@ import { useEffect } from 'react';
 
 interface AdBannerProps {
     challenge?: { isPaid: boolean };
+    isPremium?: boolean;
 }
 
-export function AdBanner({ challenge }: AdBannerProps) {
+export function AdBanner({ challenge, isPremium = false }: AdBannerProps) {
     useEffect(() => {
         try {
             // @ts-ignore
@@ -14,16 +15,16 @@ export function AdBanner({ challenge }: AdBannerProps) {
         }
     }, []);
 
-    if (challenge?.isPaid) return null;
+    if (challenge?.isPaid || isPremium) return null;
 
     return (
-        <div className="w-full flex justify-center py-4 bg-muted/20">
+        <div className="w-full flex justify-center py-4 bg-muted/20 min-h-[100px] text-center">
             <ins
                 className="adsbygoogle"
-                style={{ display: 'block' }}
-                data-ad-client="ca-pub-XXXXX"
-                data-ad-slot="XXXXX"
-                data-ad-format="horizontal"
+                style={{ display: 'block', minWidth: '300px', minHeight: '50px' }}
+                data-ad-client="ca-pub-9811695349836486"
+                data-ad-slot="7145238014"
+                data-ad-format="auto"
                 data-full-width-responsive="true"
             />
         </div>

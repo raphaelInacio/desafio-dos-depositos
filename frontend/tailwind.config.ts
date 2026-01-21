@@ -15,6 +15,9 @@ export default {
     extend: {
       fontFamily: {
         sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        headline: ['"Outfit"', 'sans-serif'],
+        subhead: ['"DM Sans"', 'sans-serif'],
+        body: ['"Inter"', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -22,10 +25,21 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+        // Landing Page Specific Colors
+        emerald: {
+          DEFAULT: "#10b981",
         },
+        gold: {
+          DEFAULT: "hsl(var(--gold))",
+          foreground: "hsl(var(--gold-foreground))",
+          new: "#f59e0b",
+        },
+        pink: {
+          DEFAULT: "#ec4899",
+        },
+        offwhite: "#fafaf9",
+        dark: "#0f172a",
+
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
@@ -82,6 +96,7 @@ export default {
         'gold': 'var(--shadow-gold)',
         'card': 'var(--shadow-md)',
         'card-hover': 'var(--shadow-lg)',
+        'tactile': 'var(--shadow-tactile)',
       },
       keyframes: {
         "accordion-down": {
@@ -93,11 +108,11 @@ export default {
           to: { height: "0" },
         },
         "pulse-glow": {
-          "0%, 100%": { 
+          "0%, 100%": {
             boxShadow: "0 0 20px -5px hsl(var(--primary) / 0.4)",
             transform: "scale(1)"
           },
-          "50%": { 
+          "50%": {
             boxShadow: "0 0 30px -5px hsl(var(--primary) / 0.6)",
             transform: "scale(1.02)"
           },

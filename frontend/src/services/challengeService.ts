@@ -122,6 +122,12 @@ export async function createChallenge(
             await updateDoc(userRef, { referralRewardClaimed: false });
         }
 
+        // 1.5 PREMIUM Logic
+        // If user is Premium, challenge is paid/ad-free by default
+        if (userData.isPremium) {
+            isPaid = true;
+        }
+
         // 2. GRANT REWARD Logic
         // Check if this is the FIRST challenge ever created by this user
         const challengesQuery = query(collection(db, `users/${uid}/challenges`));

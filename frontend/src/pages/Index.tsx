@@ -1,5 +1,11 @@
-import { useState } from 'react';
-import { HeroSection } from '@/components/HeroSection';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { LandingNavbar } from '@/components/landing/LandingNavbar';
+import { LandingHero } from '@/components/landing/LandingHero';
+import { HowItWorks } from '@/components/landing/HowItWorks';
+import { GallerySection } from '@/components/landing/GallerySection';
+import { PricingSection } from '@/components/landing/PricingSection';
+import { LandingFooter } from '@/components/landing/LandingFooter';
 import { ChallengeTracker } from '@/components/ChallengeTracker';
 import { CreateChallengeModal } from '@/components/CreateChallengeModal';
 import { ReferralCard } from '@/components/ReferralCard';
@@ -29,6 +35,26 @@ const Index = () => {
   const { showAd } = useInterstitialAd();
   const { userData } = useUserData();
   const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleStartChallenge = () => {
+    if (!user) {
+      navigate('/register');
+      return;
+    }
+    setShowCreateModal(true);
+  };
+
+  // Show Interstitial Ad on Page Load for Free Users
+  useEffect(() => {
+    if (user && challenge && !userData?.isPremium) {
+      // Small delay to ensure UI is ready/viewable before ad attempts to show
+      const timer = setTimeout(() => {
+        showAd();
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [user, challenge, userData?.isPremium]);
 
   const handleCreateChallenge = (
     name: string,
@@ -42,6 +68,10 @@ const Index = () => {
   };
 
   const onNewChallengeClick = () => {
+    if (!user) {
+      navigate('/register');
+      return;
+    }
     // Check limits
     const currentCount = challenges ? challenges.length : (challenge ? 1 : 0);
     if (canCreateChallenge(userData, currentCount)) {
@@ -54,13 +84,14 @@ const Index = () => {
   const handleToggleDeposit = async (depositId: number) => {
     if (!challenge) return;
 
-    const deposit = challenge.deposits.find((d) => d.id === depositId);
-    if (deposit && !deposit.isPaid && !challenge.isPaid) {
-      const nextCounter = (challenge.adsDepositCounter || 0) + 1;
-      if (nextCounter % 3 === 0) {
-        await showAd();
-      }
-    }
+    // Ad trigger moved to page load
+    // if (deposit && !deposit.isPaid && !challenge.isPaid) {
+    //   const nextCounter = (challenge.adsDepositCounter || 0) + 1;
+    //   // Only show ad if user is NOT premium
+    //   if (nextCounter % 3 === 0 && !userData?.isPremium) {
+    //     await showAd();
+    //   }
+    // }
 
     await toggleDeposit(depositId);
   };
@@ -78,7 +109,14 @@ const Index = () => {
   if (!challenge) {
     return (
       <>
-        <HeroSection onStartChallenge={() => setShowCreateModal(true)} />
+        <LandingNavbar onStart={handleStartChallenge} />
+        <LandingHero onStart={handleStartChallenge} />
+        <HowItWorks />
+        <GallerySection />
+        <PricingSection onStart={handleStartChallenge} />
+        <LandingFooter onStart={handleStartChallenge} />
+
+
         <CreateChallengeModal
           isOpen={showCreateModal}
           onClose={() => setShowCreateModal(false)}
@@ -91,58 +129,17 @@ const Index = () => {
   // Show the tracker if a challenge exists
   return (
     <>
-      {/* Top Bar for Multi-Challenge */}
-      {challenges && challenges.length > 0 && (
-        <div className="container max-w-md mx-auto px-4 pt-4 flex items-center justify-between">
-          {challenges.length > 1 ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-2 max-w-[200px]">
-                  <span className="truncate">{challenge.name}</span>
-                  <ChevronDown className="w-4 h-4 opacity-50" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start">
-                {challenges.map(c => (
-                  <DropdownMenuItem key={c.id} onClick={() => selectChallenge(c.id)}>
-                    {c.name} {c.isPaid && "✨"}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <div className="font-semibold text-lg truncate max-w-[200px]">{challenge.name}</div>
-          )}
-
-          <Button size="sm" variant="ghost" className="text-primary gap-1" onClick={onNewChallengeClick}>
-            <Plus className="w-4 h-4" /> Novo
-          </Button>
-        </div>
-      )}
-
       <ChallengeTracker
         challenge={challenge}
+        challenges={challenges}
         onToggleDeposit={handleToggleDeposit}
         onReset={resetChallenge}
+        onSelectChallenge={selectChallenge}
+        onNewChallenge={onNewChallengeClick}
+        userData={userData}
       />
 
-      {/* Show Referral Card if authenticated */}
-      {user && userData && (
-        <div className="container max-w-md mx-auto px-4 pb-20 space-y-6">
-          <ReferralCard
-            referralCode={userData.referralCode}
-            hasAvailableReward={userData.referralRewardClaimed}
-            className="mt-6"
-          />
-
-          <div className="bg-card rounded-2xl p-6 shadow-sm border space-y-4">
-            <h3 className="font-semibold text-lg">Personalização</h3>
-            <ThemeSelector />
-          </div>
-        </div>
-      )}
-
-      <AdBanner challenge={challenge} />
+      <AdBanner challenge={challenge} isPremium={userData?.isPremium} />
 
       <CreateChallengeModal
         isOpen={showCreateModal}
