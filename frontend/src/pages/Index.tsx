@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LandingNavbar } from '@/components/landing/LandingNavbar';
 import { LandingHero } from '@/components/landing/LandingHero';
@@ -45,6 +45,17 @@ const Index = () => {
     setShowCreateModal(true);
   };
 
+  // Show Interstitial Ad on Page Load for Free Users
+  useEffect(() => {
+    if (user && challenge && !userData?.isPremium) {
+      // Small delay to ensure UI is ready/viewable before ad attempts to show
+      const timer = setTimeout(() => {
+        showAd();
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [user, challenge, userData?.isPremium]);
+
   const handleCreateChallenge = (
     name: string,
     targetAmount: number,
@@ -73,13 +84,14 @@ const Index = () => {
   const handleToggleDeposit = async (depositId: number) => {
     if (!challenge) return;
 
-    const deposit = challenge.deposits.find((d) => d.id === depositId);
-    if (deposit && !deposit.isPaid && !challenge.isPaid) {
-      const nextCounter = (challenge.adsDepositCounter || 0) + 1;
-      if (nextCounter % 3 === 0) {
-        await showAd();
-      }
-    }
+    // Ad trigger moved to page load
+    // if (deposit && !deposit.isPaid && !challenge.isPaid) {
+    //   const nextCounter = (challenge.adsDepositCounter || 0) + 1;
+    //   // Only show ad if user is NOT premium
+    //   if (nextCounter % 3 === 0 && !userData?.isPremium) {
+    //     await showAd();
+    //   }
+    // }
 
     await toggleDeposit(depositId);
   };
@@ -127,7 +139,7 @@ const Index = () => {
         userData={userData}
       />
 
-      <AdBanner challenge={challenge} />
+      <AdBanner challenge={challenge} isPremium={userData?.isPremium} />
 
       <CreateChallengeModal
         isOpen={showCreateModal}
