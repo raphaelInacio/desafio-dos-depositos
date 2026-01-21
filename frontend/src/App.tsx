@@ -12,6 +12,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import UpgradePage from "./pages/UpgradePage";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -23,6 +24,14 @@ const App = () => (
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route
+              path="/upgrade"
+              element={
+                <ProtectedRoute>
+                  <UpgradePage />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/"
               element={

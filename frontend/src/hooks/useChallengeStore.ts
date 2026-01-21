@@ -8,6 +8,7 @@ import {
   updateChallenge,
   deleteChallenge,
   subscribeToChallenge,
+  subscribeToChallenges,
   ChallengeInput,
 } from '@/services/challengeService';
 
@@ -16,6 +17,7 @@ const STORAGE_KEY = 'desafio-depositos-challenge';
 export function useChallengeStore() {
   const { user } = useAuth();
   const [challenge, setChallenge] = useState<Challenge | null>(null);
+  const [challenges, setChallenges] = useState<Challenge[]>([]); // Task 8.0: Store all challenges
   const [isLoaded, setIsLoaded] = useState(false);
 
   // ==================== MODO FIRESTORE ====================
@@ -31,28 +33,30 @@ export function useChallengeStore() {
 
     const loadChallenges = async () => {
       try {
-        const challenges = await getChallenges(user.uid);
+        // Setup realtime listener for ALL challenges
+        unsubscribe = subscribeToChallenges( // Use subscribeToChallenges instead of one-off get
+          user.uid,
+          (updatedChallenges) => {
+            setChallenges(updatedChallenges);
 
-        // Por enquanto, pegamos apenas o primeiro challenge
-        // TODO: Implementar múltiplos challenges na Task 8.0 (Premium Features)
-        if (challenges.length > 0) {
-          setChallenge(challenges[0]);
+            // If there's no active challenge selected, or the selected one was deleted, select the first one
+            setChallenge(prev => {
+              if (!prev) return updatedChallenges.length > 0 ? updatedChallenges[0] : null;
 
-          // Setup realtime listener
-          unsubscribe = subscribeToChallenge(
-            user.uid,
-            challenges[0].id,
-            (updatedChallenge) => {
-              setChallenge(updatedChallenge);
-            },
-            (error) => {
-              console.error('Error in challenge subscription:', error);
-            }
-          );
-        }
+              const stillExists = updatedChallenges.find(c => c.id === prev.id);
+              return stillExists || (updatedChallenges.length > 0 ? updatedChallenges[0] : null);
+            });
+
+            setIsLoaded(true);
+          },
+          (error) => {
+            console.error('Error in challenges subscription:', error);
+            setIsLoaded(true); // Ensure we set loaded even on error
+          }
+        );
+
       } catch (error) {
-        console.error('Failed to load challenges from Firestore:', error);
-      } finally {
+        console.error('Failed to setup challenges listener:', error);
         setIsLoaded(true);
       }
     };
@@ -84,6 +88,7 @@ export function useChallengeStore() {
           paidAt: d.paidAt ? new Date(d.paidAt) : undefined,
         }));
         setChallenge(parsed);
+        setChallenges([parsed]); // LocalStorage supports only 1 for now
       } catch (e) {
         console.error('Failed to parse stored challenge:', e);
       }
@@ -97,10 +102,18 @@ export function useChallengeStore() {
 
     if (isLoaded && challenge) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(challenge));
+      // LocalStorage mode doesn't really store the array, just the active one
     }
   }, [challenge, isLoaded, user]);
 
   // ==================== PUBLIC INTERFACE ====================
+
+  const selectChallenge = useCallback((challengeId: string) => {
+    const selected = challenges.find(c => c.id === challengeId);
+    if (selected) {
+      setChallenge(selected);
+    }
+  }, [challenges]);
 
   const saveChallenge = useCallback(async (newChallenge: Challenge) => {
     if (user) {
@@ -114,7 +127,8 @@ export function useChallengeStore() {
         };
 
         const created = await createChallenge(user.uid, input);
-        setChallenge(created);
+        // Optimistic update handled by listener, but we can try to set it immediately if needed
+        // setChallenge(created); 
       } catch (error) {
         console.error('Failed to create challenge in Firestore:', error);
         throw error;
@@ -122,6 +136,7 @@ export function useChallengeStore() {
     } else {
       // localStorage mode
       setChallenge(newChallenge);
+      setChallenges([newChallenge]);
     }
   }, [user]);
 
@@ -141,23 +156,7 @@ export function useChallengeStore() {
 
         await updateDeposit(user.uid, challenge.id, depositId, updates);
 
-        // Check if all deposits are now paid
-        const updatedDeposits = challenge.deposits.map((d) =>
-          d.id === depositId ? { ...d, ...updates } : d
-        );
-        const allPaid = updatedDeposits.every((d) => d.isPaid);
-
-        if (allPaid && !challenge.completedAt) {
-          await updateChallenge(user.uid, challenge.id, {
-            completedAt: new Date(),
-          });
-        } else if (!allPaid && challenge.completedAt) {
-          await updateChallenge(user.uid, challenge.id, {
-            completedAt: undefined,
-          });
-        }
-
-        // Listener will update the state automatically
+        // Listener will update state
       } catch (error) {
         console.error('Failed to update deposit in Firestore:', error);
         throw error;
@@ -179,12 +178,14 @@ export function useChallengeStore() {
         });
 
         const allPaid = updatedDeposits.every((d) => d.isPaid);
-
-        return {
+        const updatedChallenge = {
           ...prev,
           deposits: updatedDeposits,
           completedAt: allPaid ? new Date() : undefined,
         };
+
+        setChallenges([updatedChallenge]);
+        return updatedChallenge;
       });
     }
   }, [user, challenge]);
@@ -194,7 +195,7 @@ export function useChallengeStore() {
       // Firestore mode: delete challenge from backend
       try {
         await deleteChallenge(user.uid, challenge.id);
-        setChallenge(null);
+        // Listener handles removal
       } catch (error) {
         console.error('Failed to delete challenge from Firestore:', error);
         throw error;
@@ -203,11 +204,14 @@ export function useChallengeStore() {
       // localStorage mode
       localStorage.removeItem(STORAGE_KEY);
       setChallenge(null);
+      setChallenges([]);
     }
   }, [user, challenge]);
 
   return {
     challenge,
+    challenges,
+    selectChallenge,
     isLoaded,
     saveChallenge,
     toggleDeposit,
