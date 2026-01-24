@@ -8,7 +8,7 @@ interface TrackerGridProps {
 
 export function TrackerGrid({ deposits, onToggleDeposit }: TrackerGridProps) {
   return (
-    <div className="grid grid-cols-4 gap-2 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8">
+    <div className="grid grid-cols-4 gap-1.5 xs:gap-2 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8">
       {deposits.map((deposit, index) => (
         <DepositCard
           key={deposit.id}

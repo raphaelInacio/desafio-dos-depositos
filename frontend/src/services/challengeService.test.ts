@@ -67,6 +67,13 @@ describe("challengeService", () => {
             vi.mocked(firestore.doc).mockReturnValue(mockChallengeRef as any);
             vi.mocked(firestore.collection).mockReturnValue({} as any);
             vi.mocked(firestore.writeBatch).mockReturnValue(mockBatch as any);
+            // Mock getDoc for user check
+            vi.mocked(firestore.getDoc).mockResolvedValue({
+                exists: () => true,
+                data: () => ({ isPremium: false, referralRewardClaimed: false }),
+            } as any);
+            // Mock getDocs for challenges check (referral)
+            vi.mocked(firestore.getDocs).mockResolvedValue({ empty: true, docs: [] } as any);
 
             const input: ChallengeInput = {
                 name: "Teste Challenge",
@@ -98,6 +105,13 @@ describe("challengeService", () => {
             vi.mocked(firestore.doc).mockReturnValue({ id: "test-id" } as any);
             vi.mocked(firestore.collection).mockReturnValue({} as any);
             vi.mocked(firestore.writeBatch).mockReturnValue(mockBatch as any);
+            // Mock getDoc for user check
+            vi.mocked(firestore.getDoc).mockResolvedValue({
+                exists: () => true,
+                data: () => ({ isPremium: false, referralRewardClaimed: false }),
+            } as any);
+            // Mock getDocs for challenges check (referral)
+            vi.mocked(firestore.getDocs).mockResolvedValue({ empty: true, docs: [] } as any);
 
             const input: ChallengeInput = {
                 name: "Test",

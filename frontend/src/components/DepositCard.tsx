@@ -38,11 +38,11 @@ export function DepositCard({ deposit, onToggle, index }: DepositCardProps) {
         </motion.div>
       )}
 
-      <span className="font-headline font-extrabold text-sm leading-none pt-1">
+      <span className="font-headline font-extrabold text-xs sm:text-sm leading-none pt-1">
         {formatCurrency(deposit.value).replace('R$', '')}
       </span>
       <span className={cn(
-        'text-[10px] font-subhead uppercase tracking-wider opacity-60',
+        'text-[9px] sm:text-[10px] font-subhead uppercase tracking-wider opacity-60',
         deposit.isPaid ? 'text-white' : 'text-text-light'
       )}>
         {deposit.isPaid ? 'Pago' : 'Poupar'}

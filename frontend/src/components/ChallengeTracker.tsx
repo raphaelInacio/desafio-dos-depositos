@@ -39,7 +39,7 @@ interface ChallengeTrackerProps {
   challenges?: Challenge[];
   onToggleDeposit: (depositId: number) => void;
   onReset: () => void;
-  onSelectChallenge: (id: number) => void;
+  onSelectChallenge: (id: string) => void;
   onNewChallenge: () => void;
   userData?: any;
 }
@@ -90,11 +90,12 @@ export function ChallengeTracker({
   return (
     <div className="min-h-screen bg-offwhite">
       {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-black/5 bg-white/90 px-4 py-3 backdrop-blur-md shadow-sm">
+      {/* Header */}
+      <header className="sticky top-0 z-40 border-b border-black/5 bg-white/90 px-3 py-2 md:px-4 md:py-3 backdrop-blur-md shadow-sm">
         <div className="mx-auto flex max-w-4xl items-center justify-between">
           {/* Left: Challenge Selector */}
-          <div className="flex items-center gap-3 overflow-hidden">
-            <div className="w-10 h-10 bg-gradient-to-br from-emerald to-gold rounded-full flex items-center justify-center text-xl shadow-sm flex-shrink-0">
+          <div className="flex items-center gap-2 md:gap-3 overflow-hidden">
+            <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-emerald to-gold rounded-full flex items-center justify-center text-lg md:text-xl shadow-sm flex-shrink-0">
               💰
             </div>
 
@@ -102,9 +103,9 @@ export function ChallengeTracker({
               {challenges && challenges.length > 1 ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="flex items-center gap-1 font-headline font-extrabold text-lg leading-tight text-text hover:text-pink transition-colors text-left">
+                    <button className="flex items-center gap-1 font-headline font-extrabold text-base md:text-lg leading-tight text-text hover:text-pink transition-colors text-left">
                       <span className="truncate">{challenge.name}</span>
-                      <ChevronDown className="w-4 h-4 opacity-50 flex-shrink-0" />
+                      <ChevronDown className="w-3 h-3 md:w-4 md:h-4 opacity-50 flex-shrink-0" />
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start" className="w-[200px]">
@@ -116,7 +117,7 @@ export function ChallengeTracker({
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <h1 className="font-headline font-extrabold text-lg leading-tight text-text truncate">
+                <h1 className="font-headline font-extrabold text-base md:text-lg leading-tight text-text truncate">
                   {challenge.name}
                 </h1>
               )}
@@ -128,7 +129,7 @@ export function ChallengeTracker({
           </div>
 
           {/* Right: Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 md:gap-2">
             <Button
               size="sm"
               variant="ghost"
@@ -141,7 +142,7 @@ export function ChallengeTracker({
             <Button
               size="icon"
               variant="ghost"
-              className="text-primary sm:hidden"
+              className="text-primary sm:hidden h-8 w-8"
               onClick={onNewChallenge}
             >
               <Plus className="w-5 h-5" />
@@ -149,8 +150,8 @@ export function ChallengeTracker({
 
             <Sheet>
               <SheetTrigger asChild>
-                <Button size="icon" variant="ghost" className="text-text-light hover:text-text">
-                  <Settings className="w-5 h-5" />
+                <Button size="icon" variant="ghost" className="text-text-light hover:text-text h-8 w-8 md:h-10 md:w-10">
+                  <Settings className="w-4 h-4 md:w-5 md:h-5" />
                 </Button>
               </SheetTrigger>
               <SheetContent className="w-full sm:max-w-md overflow-y-auto">
@@ -219,7 +220,7 @@ export function ChallengeTracker({
       </header>
 
       {/* Main content */}
-      <main className="mx-auto max-w-4xl px-4 py-6">
+      <main className="mx-auto max-w-4xl px-3 py-4 md:px-4 md:py-6 pb-24 md:pb-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
