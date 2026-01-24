@@ -11,8 +11,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class AsaasCheckoutRequest {
     private String customer;
+    private String billingType;
     private BigDecimal value;
+    private String dueDate;
+    private String description;
     private String externalReference;
-    private String successUrl;
-    private String cancelUrl;
 }

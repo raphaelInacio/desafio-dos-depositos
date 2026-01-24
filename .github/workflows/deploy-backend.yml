@@ -1,0 +1,87 @@
+name: Deploy Backend to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+      - '.github/workflows/deploy-backend.yml'
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: us-central1
+  REPO_NAME: backend-repo
+  SERVICE_NAME: backend-service
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Google Auth
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DESAFIO_DEPOSITOS_APP }}'
+
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
+
+      - name: Build and Push Container
+        run: |
+          cd backend
+          docker build -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.SERVICE_NAME }}:${{ github.sha }} .
+          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
+
+      - name: Prepare Backend Credentials
+        id: creds
+        run: |
+          # Encode the secret to base64 to pass as a safe single-line environment variable
+          echo "SA_BASE64=$(echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DESAFIO_DEPOSITOS_APP }}' | base64 -w 0)" >> $GITHUB_OUTPUT
+
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.SERVICE_NAME }}
+          region: ${{ env.REGION }}
+          image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
+          env_vars: |
+            ASAAS_API_KEY=${{ secrets.ASAAS_API_KEY }}
+            ASAAS_WEBHOOK_TOKEN=${{ secrets.ASAAS_WEBHOOK_TOKEN }}
+            FRONTEND_URL=https://desafio-depositos-app.web.app
+            CORS_ALLOWED_ORIGINS=https://desafio-depositos-app.web.app,http://localhost:5173
+            SPRING_PROFILES_ACTIVE=prod
+            FIREBASE_SERVICE_ACCOUNT_PATH=/app/firebase-service-account.json
+            FIREBASE_SERVICE_ACCOUNT_BASE64=${{ steps.creds.outputs.SA_BASE64 }}
+
+      # We need to handle the firebase service account file. 
+      # Since we can't easily mount a file from secrets in Cloud Run without using Secret Manager efficiently,
+      # A common pattern is to pass base64 encoded content as an env var/secret and decode it in the Dockerfile or entrypoint.
+      # HOWEVER, for Spring Boot to read it, it needs a file path.
+      # Let's adjust the deploy step to use an ENTRYPOINT script or modify the code to read from Env Var (which requires code change).
+      # Alternatively, we can mount the secret as a volume if we use the full gcloud deploy command or advanced config.
+      # BUT, `google-github-actions/deploy-cloudrun@v2` supports `secrets`.
+      # Let's check how to mount secrets as files.
+      # The `secrets` input maps environment variables to Secret Manager versions.
+      # It does NOT mount as volume automatically unless configured in the service yaml.
+      
+      # SIMPLIFICATION FOR THIS ITERATION:
+      # We will modify the Dockerfile to accept a build argument or just expect the file to be provided at runtime.
+      # Actually, the easier way for cloud run without complex volume mounting is:
+      # Pass the JSON content as an ENV VAR (FIREBASE_SERVICE_ACCOUNT_JSON)
+      # And have the application write it to a file on startup OR modify application to read from JSON content directly.
+      # Spring Boot Google Cloud starter usually supports `spring.cloud.gcp.credentials.encoded-key`.
+      # BUT we are using standard Firebase Admin SDK.
+      
+      # Let's assume for now we will use a small entrypoint script in the Dockerfile to write the secret to a file if it exists as an ENV var.

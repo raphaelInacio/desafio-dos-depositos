@@ -16,4 +16,11 @@ COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+RUN echo '#!/bin/sh' > /entrypoint.sh && \
+    echo 'if [ ! -z "$FIREBASE_SERVICE_ACCOUNT_BASE64" ]; then' >> /entrypoint.sh && \
+    echo '  echo "$FIREBASE_SERVICE_ACCOUNT_BASE64" | base64 -d > /app/firebase-service-account.json' >> /entrypoint.sh && \
+    echo 'fi' >> /entrypoint.sh && \
+    echo 'exec java -jar app.jar' >> /entrypoint.sh && \
+    chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]

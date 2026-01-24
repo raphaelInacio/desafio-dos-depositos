@@ -63,41 +63,54 @@ public class AsaasService {
     }
 
     /**
-     * Cria uma checkout session no Asaas
+     * Cria uma cobrança (Pagamento) no Asaas para redirecionamento.
+     * Retorna a invoiceUrl para onde o user deve ser redirecionado.
      */
     public String createCheckoutSession(String customerId, String userId) {
-        log.info("Creating checkout session for customer: {}", customerId);
+        log.info("Creating payment for customer: {}", customerId);
 
-        String url = baseUrl + "/paymentLinks";
+        String url = baseUrl + "/payments";
         HttpHeaders headers = createHeaders();
+
+        // Data de vencimento = Amanhã (Simples lógica para pagamento imediato)
+        String dueDate = java.time.LocalDate.now().plusDays(1).toString();
 
         AsaasCheckoutRequest request = new AsaasCheckoutRequest(
                 customerId,
+                "UNDEFINED", // Permite user escolher (Boleto/Pix/Card) na tela do Asaas
                 new BigDecimal("4.99"),
-                userId, // externalReference para rastrear o pagamento
-                successUrl,
-                cancelUrl);
+                dueDate,
+                "Upgrade para Premium - Desafio dos Depósitos",
+                userId // referencing user for webhook
+        );
 
         HttpEntity<AsaasCheckoutRequest> entity = new HttpEntity<>(request, headers);
 
         try {
+            // Note: AsaasPaymentResponse is essentially same as CheckoutResponse but let's
+            // confirm format
+            // response.invoiceUrl is what we want.
+            // Using AsaasCheckoutResponse for now if it maps 'url' or 'invoiceUrl'.
+            // Let's assume we need to fix the Response DTO too to match Payment response.
             ResponseEntity<AsaasCheckoutResponse> response = restTemplate.exchange(
                     url,
                     HttpMethod.POST,
                     entity,
                     AsaasCheckoutResponse.class);
 
-            if (response.getBody() == null || response.getBody().getUrl() == null) {
-                throw new PaymentException("Failed to create checkout session: empty response");
+            if (response.getBody() == null || response.getBody().getInvoiceUrl() == null) {
+                // Fallback: check 'url' or 'bankSlipUrl' or throw
+                // Asaas API v3 /payments returns 'invoiceUrl'.
+                throw new PaymentException("Failed to create payment: invoices url missing");
             }
 
-            String checkoutUrl = response.getBody().getUrl();
-            log.info("Checkout session created: {}", checkoutUrl);
+            String checkoutUrl = response.getBody().getInvoiceUrl();
+            log.info("Payment created: {}", checkoutUrl);
             return checkoutUrl;
 
         } catch (HttpClientErrorException e) {
-            log.error("Error creating checkout session: {}", e.getMessage());
-            throw new PaymentException("Failed to create checkout session", e);
+            log.error("Error creating payment: {}", e.getResponseBodyAsString());
+            throw new PaymentException("Failed to create payment session", e);
         }
     }
 

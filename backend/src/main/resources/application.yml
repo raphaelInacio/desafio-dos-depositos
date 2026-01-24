@@ -23,3 +23,6 @@ logging:
   level:
     com.desafiodosdepositos: DEBUG
     org.springframework.web: INFO
+
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,https://desafio-depositos-app.web.app}

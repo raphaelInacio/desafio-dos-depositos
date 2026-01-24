@@ -81,8 +81,8 @@ class AsaasServiceTest {
     void createCheckoutSession_Success() {
         // Arrange
         AsaasCheckoutResponse mockResponse = new AsaasCheckoutResponse();
-        mockResponse.setId("link_123");
-        mockResponse.setUrl("https://sandbox.asaas.com/c/abc123");
+        mockResponse.setId("pay_123");
+        mockResponse.setInvoiceUrl("https://sandbox.asaas.com/i/abc123");
 
         when(restTemplate.exchange(
                 anyString(),
@@ -94,7 +94,7 @@ class AsaasServiceTest {
         String checkoutUrl = asaasService.createCheckoutSession("cus_123", "user_123");
 
         // Assert
-        assertEquals("https://sandbox.asaas.com/c/abc123", checkoutUrl);
+        assertEquals("https://sandbox.asaas.com/i/abc123", checkoutUrl);
     }
 
     @Test
