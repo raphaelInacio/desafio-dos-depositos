@@ -1,18 +1,56 @@
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Check } from 'lucide-react';
+import { Check, Sparkles } from 'lucide-react';
+import confetti from 'canvas-confetti';
 
 interface LandingHeroProps {
     onStart: () => void;
 }
 
 export function LandingHero({ onStart }: LandingHeroProps) {
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            triggerConfetti();
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    }, []);
+
+    const triggerConfetti = () => {
+        const duration = 3000;
+        const end = Date.now() + duration;
+        const colors = ['#ec4899', '#10b981', '#f59e0b'];
+
+        (function frame() {
+            confetti({
+                particleCount: 2,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+                colors: colors,
+            });
+            confetti({
+                particleCount: 2,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+                colors: colors,
+            });
+
+            if (Date.now() < end) {
+                requestAnimationFrame(frame);
+            }
+        })();
+    };
+
     return (
         <section className="min-h-screen flex items-center justify-center pt-24 pb-16 px-8 relative overflow-hidden bg-gradient-to-br from-emerald via-gold to-pink">
             {/* Background Animation */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-0 left-0 right-0 bottom-0 bg-[radial-gradient(circle_at_20%_30%,rgba(255,255,255,0.1)_0%,transparent_50%),radial-gradient(circle_at_80%_70%,rgba(255,255,255,0.1)_0%,transparent_50%)] animate-[gradientMove_10s_ease_infinite_alternate]" />
-                {/* Confetti */}
+                {/* Floating Confetti */}
                 {[...Array(9)].map((_, i) => (
                     <div
                         key={i}
@@ -29,6 +67,16 @@ export function LandingHero({ onStart }: LandingHeroProps) {
 
             <div className="max-w-7xl w-full grid md:grid-cols-2 gap-16 items-center relative z-10">
                 <div className="text-left">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.1 }}
+                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white mb-6 backdrop-blur-sm border border-white/20"
+                    >
+                        <Sparkles className="w-4 h-4 text-yellow-300" />
+                        <span className="text-sm font-semibold">O jeito mais divertido de poupar</span>
+                    </motion.div>
+
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -59,42 +107,57 @@ export function LandingHero({ onStart }: LandingHeroProps) {
                 </div>
 
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.2 }}
-                    className="flex justify-center items-center relative"
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="relative flex justify-center items-center"
                 >
-                    <div className="relative w-[200px] h-[250px]">
-                        {[0, 1, 2, 3].map((i) => (
-                            <motion.div
-                                key={i}
-                                animate={{ translateY: [-10, 0, -10] }}
-                                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: i * 0.2 }}
-                                className="absolute w-20 h-20 rounded-full bg-gradient-to-br from-[#fbbf24] to-gold shadow-[0_8px_16px_rgba(0,0,0,0.2)] flex items-center justify-center text-4xl"
-                                style={{
-                                    bottom: `${i * 60}px`,
-                                    left: i % 2 === 0 ? '50%' : i === 1 ? '30%' : '70%',
-                                    transform: 'translateX(-50%)' // Note: This gets overridden by animate in framer-motion, handled via style if static
-                                }}
-                            >
-                                <div style={{ transform: i % 2 === 0 ? 'translateX(-50%)' : 'none', position: 'absolute', left: i % 2 === 0 ? '50%' : 'auto' }}>
-                                    💰
-                                </div>
-                            </motion.div>
-                        ))}
-                        {/* Fix alignment manually since absolute positioning with transforms can be tricky in loops */}
-                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full bg-gradient-to-br from-[#fbbf24] to-gold shadow-lg flex items-center justify-center text-3xl animate-[float_3s_ease-in-out_infinite]">💰</div>
-                        <div className="absolute bottom-[60px] left-[30%] w-20 h-20 rounded-full bg-gradient-to-br from-[#fbbf24] to-gold shadow-lg flex items-center justify-center text-3xl animate-[float_3s_ease-in-out_infinite] delay-200">💰</div>
-                        <div className="absolute bottom-[120px] left-1/2 -translate-x-1/2 w-20 h-20 rounded-full bg-gradient-to-br from-[#fbbf24] to-gold shadow-lg flex items-center justify-center text-3xl animate-[float_3s_ease-in-out_infinite] delay-400">💰</div>
-                        <div className="absolute bottom-[180px] left-[70%] -translate-x-1/2 w-20 h-20 rounded-full bg-gradient-to-br from-[#fbbf24] to-gold shadow-lg flex items-center justify-center text-3xl animate-[float_3s_ease-in-out_infinite] delay-600">💰</div>
+                    {/* Glass Card Container */}
+                    <div className="relative w-full max-w-md aspect-[4/3] rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl overflow-hidden p-4 group">
+
+                        {/* Mock Browser/App Header */}
+                        <div className="absolute top-0 left-0 right-0 h-10 bg-white/10 border-b border-white/10 flex items-center px-4 gap-2">
+                            <div className="w-3 h-3 rounded-full bg-red-400/80"></div>
+                            <div className="w-3 h-3 rounded-full bg-yellow-400/80"></div>
+                            <div className="w-3 h-3 rounded-full bg-green-400/80"></div>
+                        </div>
+
+                        {/* Grid Image */}
+                        <div className="mt-8 w-full h-full rounded-xl overflow-hidden shadow-inner relative bg-white/5">
+                            <img
+                                src="/hero-grid.png"
+                                alt="Dashboard do Desafio"
+                                className="w-full h-full object-cover object-top opacity-95 group-hover:scale-105 transition-transform duration-700"
+                            />
+
+                            {/* Overlay Gradient for depth */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+                        </div>
+
+                        {/* Floating Checkmark Animation */}
+                        <motion.div
+                            initial={{ scale: 0, opacity: 0 }}
+                            animate={{ scale: [0, 1.2, 1], opacity: 1 }}
+                            transition={{ delay: 1.5, type: 'spring' }}
+                            className="absolute bottom-12 right-12 w-16 h-16 bg-emerald rounded-full flex items-center justify-center shadow-lg border-4 border-white z-20"
+                        >
+                            <Check className="w-8 h-8 text-white" strokeWidth={4} />
+                        </motion.div>
+
+                        {/* 3D Floating Elements Decoration */}
+                        <motion.div
+                            animate={{ y: [-10, 10, -10], rotate: [0, 5, 0] }}
+                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute -top-6 -right-6 w-20 h-20 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-2xl shadow-xl flex items-center justify-center text-3xl rotate-12 z-30"
+                        >
+                            💰
+                        </motion.div>
 
                         <motion.div
-                            animate={{ scale: [1, 1.1, 1] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                            className="absolute top-1/2 -right-8 text-6xl text-emerald drop-shadow-md"
-                        >
-                            <Check strokeWidth={4} className="w-16 h-16" />
-                        </motion.div>
+                            animate={{ y: [10, -10, 10], rotate: [0, -5, 0] }}
+                            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute -bottom-8 -left-8 w-24 h-24 bg-white/20 backdrop-blur-lg border border-white/40 rounded-full shadow-xl z-30"
+                        />
                     </div>
                 </motion.div>
             </div>
