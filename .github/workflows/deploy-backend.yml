@@ -9,7 +9,7 @@ on:
       - '.github/workflows/deploy-backend.yml'
 
 env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  PROJECT_ID: desafio-depositos-app
   REGION: us-central1
   REPO_NAME: backend-repo
   SERVICE_NAME: backend-service

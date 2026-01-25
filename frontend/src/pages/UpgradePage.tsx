@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { createCheckoutSession } from '@/services/paymentService';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Check, Star, Zap, Palette, ShieldCheck, ArrowRight } from 'lucide-react';
@@ -8,24 +7,15 @@ import { toast } from 'sonner';
 
 export default function UpgradePage() {
     const { user } = useAuth();
-    const [loading, setLoading] = useState(false);
 
-    const handleUpgrade = async () => {
+    const handleUpgrade = () => {
         if (!user) {
             toast.error("Você precisa estar logado para fazer o upgrade.");
             return;
         }
 
-        setLoading(true);
-        try {
-            const { checkoutUrl } = await createCheckoutSession(user.uid, user.email || undefined, user.displayName || undefined);
-            // Redirect to Asaas checkout
-            window.location.href = checkoutUrl;
-        } catch (error) {
-            console.error("Erro ao iniciar checkout:", error);
-            toast.error("Erro ao iniciar pagamento. Tente novamente.");
-            setLoading(false);
-        }
+        // Redirect directly to Hotmart checkout
+        window.location.href = 'https://pay.hotmart.com/I104071194N?checkoutMode=10';
     };
 
     return (
@@ -73,20 +63,17 @@ export default function UpgradePage() {
                         <Button
                             className="w-full h-12 text-lg font-bold bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white shadow-lg border-0"
                             onClick={handleUpgrade}
-                            disabled={loading}
                         >
-                            {loading ? "Iniciando..." :
-                                <span className="flex items-center gap-2">
-                                    Quero ser Premium <ArrowRight className="w-5 h-5" />
-                                </span>
-                            }
+                            <span className="flex items-center gap-2">
+                                Quero ser Premium <ArrowRight className="w-5 h-5" />
+                            </span>
                         </Button>
                     </CardFooter>
                 </Card>
 
                 {/* Testimonials or FAQ could go here */}
                 <p className="text-center text-sm text-muted-foreground">
-                    Pagamento seguro processado pelo Asaas. Satisfação garantida.
+                    Pagamento seguro processado pela Hotmart. Satisfação garantida.
                 </p>
             </div>
         </div>

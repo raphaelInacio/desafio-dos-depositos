@@ -4,7 +4,10 @@ This document is intended for AI Agents (and human developers) to understand the
 
 ## 🧠 Architecture Overview
 
-The project follows a **Serverless-First** approach for the frontend, leveraging Firebase directly for most CRUD operations, while using a dedicated **Spring Boot Backend** strictly for sensitive operations like payments and webhooks.
+The project follows a **Serverless-First** approach for the frontend, leveraging Firebase directly for most CRUD operations.
+
+### Payment Strategy (MVP)
+Payments are handled **externally via Hotmart** (infoproduct platform). A simple **Firebase Cloud Function** receives Hotmart webhooks and updates user premium status. This approach minimizes backend complexity while enabling quick market validation.
 
 ### Key Principles
 1.  **Frontend-First Data**: The React app talks directly to Firestore. Do not create backend endpoints for simple CRUD.
@@ -23,8 +26,10 @@ The project follows a **Serverless-First** approach for the frontend, leveraging
 │   │   ├── services/       # Firebase & API service layers
 │   │   └── pages/          # Route components
 │   └── ...
-├── backend/                # Spring Boot Payment Service
-│   ├── src/main/java...    # Java source code
+├── functions/              # Firebase Cloud Functions (Hotmart webhook)
+│   ├── src/index.ts        # Webhook handler
+│   └── ...
+├── backend/                # Spring Boot (legacy/optional)
 │   └── ...
 ├── tasks/                  # Task Management
 │   ├── prd-desafio-dos-depositos/
