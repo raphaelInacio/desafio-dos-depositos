@@ -32,11 +32,11 @@ export function PricingSection({ onStart }: PricingSectionProps) {
                         viewport={{ once: true }}
                         className="bg-white p-10 rounded-2xl border-2 border-black/10 shadow-md hover:-translate-y-2 transition-transform"
                     >
-                        <h3 className="font-headline font-extrabold text-2xl mb-2 text-text">Free</h3>
+                        <h3 className="font-headline font-extrabold text-2xl mb-2 text-text">Trial Grátis</h3>
                         <div className="font-headline font-extrabold text-4xl text-pink mb-2">
                             <span className="text-2xl align-top">R$</span> 0
                         </div>
-                        <p className="text-text-light mb-8">1 Desafio Grátis</p>
+                        <p className="text-text-light mb-8">5 dias de acesso</p>
 
                         <ul className="space-y-4 mb-8">
                             <li className="flex items-center gap-3 border-b border-black/5 pb-3">

@@ -101,7 +101,7 @@ export function LandingHero({ onStart }: LandingHeroProps) {
                             onClick={onStart}
                             className="px-8 py-6 text-lg bg-pink hover:bg-pink/90 text-white font-subhead font-bold rounded-xl shadow-tactile hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(236,72,153,0.4)] transition-all active:translate-y-0 active:shadow-sm"
                         >
-                            Começar Meu Desafio Grátis
+                            Começar Teste de 5 Dias
                         </Button>
                     </motion.div>
                 </div>

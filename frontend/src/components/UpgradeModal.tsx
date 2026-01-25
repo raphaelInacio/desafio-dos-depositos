@@ -32,7 +32,7 @@ export function UpgradeModal({ isOpen, onClose, triggerAction }: UpgradeModalPro
                         {triggerAction ? (
                             <span>Para <strong>{triggerAction}</strong>, você precisa ser Premium.</span>
                         ) : (
-                            <span>Desbloqueie todo o potencial do seu desafio.</span>
+                            <span>Seu período de teste expirou. <br />Assine para continuar desbloqueando suas conquistas.</span>
                         )}
                         <br />
                         Invista em você por apenas <span className="font-bold text-foreground">R$ 4,99</span>.

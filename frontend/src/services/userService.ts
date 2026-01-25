@@ -31,7 +31,7 @@ export const createUserDocument = async (user: User, displayName: string, referr
 
     if (!userSnap.exists()) {
         const trialExpiresAt = new Date();
-        trialExpiresAt.setDate(trialExpiresAt.getDate() + 3);
+        trialExpiresAt.setDate(trialExpiresAt.getDate() + 5);
 
         let uniqueReferralCode = "";
         let isUnique = false;

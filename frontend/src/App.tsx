@@ -13,6 +13,7 @@ import Register from "./pages/Register";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import UpgradePage from "./pages/UpgradePage";
+import { SubscriptionGuard } from "./components/SubscriptionGuard";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -32,7 +33,14 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-            <Route path="/" element={<Index />} />
+            <Route
+              path="/"
+              element={
+                <SubscriptionGuard>
+                  <Index />
+                </SubscriptionGuard>
+              }
+            />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
